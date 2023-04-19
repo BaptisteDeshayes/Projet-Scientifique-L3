@@ -378,12 +378,14 @@ function Astar(Matrice::Matrix{Char}, Bool::Matrix{Bool}, Distance::Matrix{Int64
 
     eval::Int64 = 1
 
+    omega::Int64 = 1
+
     #Boucle tant que qui s'arrete quand le point d'arrivé est visité
     while ! Bool[Arrival[1],Arrival[2]]
 
         #@show pq
 
-        #recupere le point (point d'étude) avec le chemin le plus court (plus basse priorite)
+       #recupere le point (point d'étude) avec le chemin le plus court (plus basse priorite)
         point::Tuple{Int64,Int64} = dequeue!(pq)
 
         eval = eval + 1
@@ -411,7 +413,7 @@ function Astar(Matrice::Matrix{Char}, Bool::Matrix{Bool}, Distance::Matrix{Int64
             if (! Bool[point[1]+1,point[2]])
 
                 #mets dans la priority queue le  point avec comme priorité la distance du chemin depuis le poit de depart plus l'heuristique (estimation du temps d'arrivé)
-                pq[(point[1]+1,point[2])] = (Distance[point[1], point[2]] + cout((point[1]+1,point[2]),Matrice)) + abs((Arrival[1]-point[1]+1 ) + (Arrival[2] - point[2]))
+                pq[(point[1]+1,point[2])] = (Distance[point[1], point[2]] + cout((point[1]+1,point[2]),Matrice)) + omega*abs((Arrival[1]-point[1]+1 ) + (Arrival[2] - point[2]))
 
             end
 
@@ -432,7 +434,7 @@ function Astar(Matrice::Matrix{Char}, Bool::Matrix{Bool}, Distance::Matrix{Int64
             if (! Bool[point[1]-1,point[2]])
 
                 #mets dans la priority queue le  point avec comme priorité la distance du chemin depuis le poit de depart plus l'heuristique (estimation du temps d'arrivé)
-                pq[(point[1]-1,point[2])] = (Distance[point[1], point[2]] + cout((point[1]-1,point[2]),Matrice)) + abs((Arrival[1]-point[1]-1 ) + (Arrival[2] - point[2]))
+                pq[(point[1]-1,point[2])] = (Distance[point[1], point[2]] + cout((point[1]-1,point[2]),Matrice)) + omega*abs((Arrival[1]-point[1]-1 ) + (Arrival[2] - point[2]))
 
             end
            
@@ -452,7 +454,7 @@ function Astar(Matrice::Matrix{Char}, Bool::Matrix{Bool}, Distance::Matrix{Int64
             if (! Bool[point[1],point[2]+1])
 
                 #mets dans la priority queue le  point avec comme priorité la distance du chemin depuis le poit de depart plus l'heuristique (estimation du temps d'arrivé)
-                pq[(point[1],point[2]+1)] = (Distance[point[1], point[2]] + cout((point[1],point[2]+1),Matrice)) + abs((Arrival[1]-point[1] ) + (Arrival[2] - point[2]+1))
+                pq[(point[1],point[2]+1)] = (Distance[point[1], point[2]] + cout((point[1],point[2]+1),Matrice)) + omega*abs((Arrival[1]-point[1] ) + (Arrival[2] - point[2]+1))
 
             end
             
@@ -472,7 +474,7 @@ function Astar(Matrice::Matrix{Char}, Bool::Matrix{Bool}, Distance::Matrix{Int64
             if (! Bool[point[1],point[2]-1])
 
                 #mets dans la priority queue le  point avec comme priorité la distance du chemin depuis le poit de depart plus l'heuristique (estimation du temps d'arrivé)
-                pq[(point[1],point[2]-1)] = (Distance[point[1], point[2]] + cout((point[1],point[2]-1),Matrice)) + abs((Arrival[1]-point[1]) + (Arrival[2] - point[2]-1))
+                pq[(point[1],point[2]-1)] = (Distance[point[1], point[2]] + cout((point[1],point[2]-1),Matrice)) + omega*abs((Arrival[1]-point[1]) + (Arrival[2] - point[2]-1))
 
             end
             
@@ -546,7 +548,8 @@ function Draw(M::Matrix{Char}, l::Vector{Tuple{Int64,Int64}}, Visite::Matrix{Boo
         for j in 1:size(M,2)
 
             #Si la case a été visité par l'algorithme elle sera colorié en jaune sinon elle prendra la couleur correspondante a son symbole
-            if(Visite[i,j]) Color[i,j] = [255,0,255] else Color[i,j] = toColor[M[i,j]] end
+            #if(Visite[i,j]) Color[i,j] = [255,0,255] else Color[i,j] = toColor[M[i,j]] end
+            Color[i,j] = toColor[M[i,j]]
             
         end
     end
